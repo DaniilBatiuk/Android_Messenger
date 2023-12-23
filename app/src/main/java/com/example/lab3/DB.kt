@@ -25,7 +25,7 @@ class DB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATA
         onCreate(db)
     }
 
-    fun addSecureUser(username: String, email: String, password: String) {
+    fun addUser(username: String, email: String, password: String) {
         val db = this.writableDatabase
         val values = ContentValues().apply {
             put(USERNAME, username)

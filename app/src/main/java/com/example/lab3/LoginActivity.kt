@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
-            Toast.makeText(this, "Error with username or password", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error with email or password", Toast.LENGTH_SHORT).show()
         }
 
         Log.i("LoginActivity", "Email: $email, Password: $password")
