@@ -13,13 +13,16 @@ import android.widget.Toast
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var errorTextView: TextView
-    SharedPreferences sPref = null;
-
+    var sPref: SharedPreferences? = null
+    val LOGIN = "login"
+    var PASSWORD = "password"
+    private lateinit var db: DB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         errorTextView = findViewById(R.id.textView)
+        db = DB(this)
     }
 
 
@@ -32,6 +35,20 @@ class LoginActivity : AppCompatActivity() {
         val email: String = emailEditText.text.toString()
         val password: String = passwordEditText.text.toString()
 
+        if (db.validate(email, password)) {
+            sPref = getPreferences(MODE_PRIVATE)
+            val ed: SharedPreferences.Editor? = sPref?.edit()
+            ed?.putString(LOGIN, email)
+            ed?.putString(PASSWORD, password)
+            ed?.apply()
+            Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(this, MessengerActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            Toast.makeText(this, "Error with username or password", Toast.LENGTH_SHORT).show()
+        }
 
         Log.i("LoginActivity", "Email: $email, Password: $password")
 
@@ -48,14 +65,13 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    val LOGIN = "login"
-    val PASWORD = "password"
+
 
     fun saveLogin(email:String,password:String) {
         sPref = getPreferences(MODE_PRIVATE)
-        val ed: SharedPreferences.Editor = sPref.edit()
+        val ed: SharedPreferences.Editor = sPref!!.edit()
         ed.putString(LOGIN, email)
-        ed.putString(PASWORD, password)
+        ed.putString(PASSWORD, password)
         ed.commit()
         Toast.makeText(this, "Text saved", Toast.LENGTH_SHORT).show()
     }

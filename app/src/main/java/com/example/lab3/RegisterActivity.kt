@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 
 class RegisterActivity : AppCompatActivity() {
@@ -13,7 +14,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var passwordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
     private lateinit var errorTextView: TextView
-
+    private lateinit var dbHelper: DB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -22,7 +23,7 @@ class RegisterActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.editTextTextPassword2)
         confirmPasswordEditText = findViewById(R.id.editTextTextPassword4)
         errorTextView = findViewById(R.id.textView4)
-
+        dbHelper = DB(this)
     }
 
     fun login(view: View) {
@@ -36,6 +37,10 @@ class RegisterActivity : AppCompatActivity() {
         val password: String = passwordEditText.text.toString()
         val confirmPassword: String = confirmPasswordEditText.text.toString()
 
+        if (dbHelper.emailExists(email)) {
+            Toast.makeText(this, "This email already exist", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         if (password == confirmPassword) {
             val logMessage = "Email: $email, Password: $password"
